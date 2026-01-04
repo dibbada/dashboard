@@ -21,6 +21,7 @@ app.get('/api/system', async (req, res) => {
         const cpu = await si.currentLoad();
         const mem = await si.mem();
         const osInfo = await si.osInfo();
+        const timeInfo = await si.time(); // ← Add this line
 
         res.json({
             cpu: cpu.currentLoad,
@@ -35,7 +36,7 @@ app.get('/api/system', async (req, res) => {
                 distro: osInfo.distro,
                 release: osInfo.release
             },
-            uptime: osInfo.uptime // This wasn't in osInfo type by default in older versions but often is available, or use si.time().uptime
+            uptime: timeInfo.uptime // ← Use timeInfo.uptime instead
         });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch system stats' });
