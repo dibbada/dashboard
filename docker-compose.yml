@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  filestash:
+    image: machines/filestash:latest
+    container_name: daily-hub-filestash
+    restart: unless-stopped
+    ports:
+      - "8334:8334"
+    volumes:
+      - ./data/filestash_config:/app/data/state/config
+    environment:
+      - APPLICATION_URL=http://localhost:8334
+
+  # Optional: Production build of the dashboard
+  # dashboard:
+  #   build: .
+  #   ports:
+  #     - "80:80"
