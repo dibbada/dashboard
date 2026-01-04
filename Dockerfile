@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+COPY .  .
 
 # Build frontend
 RUN npm run build
@@ -16,8 +16,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+# Install server dependencies
+COPY server/package*.json ./server/
+RUN cd server && npm ci --only=production
 
 # Copy built frontend
 COPY --from=builder /app/dist ./dist
@@ -27,4 +28,7 @@ COPY server ./server
 
 EXPOSE 3001
 
-CMD ["npm", "run", "server"]
+# Build and run server
+WORKDIR /app/server
+RUN npm run build
+CMD ["npm", "start"]
